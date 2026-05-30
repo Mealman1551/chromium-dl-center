@@ -312,6 +312,18 @@ class SwitcherApp:
     def _build_ui(self):
         root = self.root
 
+        icon_path = Path(__file__).resolve().parent / "icon.png"
+        self.logo_image = None
+        if icon_path.exists():
+            try:
+                img = tk.PhotoImage(file=str(icon_path))
+                max_size = 32
+                subsample_x = max(1, round(img.width() / max_size))
+                subsample_y = max(1, round(img.height() / max_size))
+                self.logo_image = img.subsample(subsample_x, subsample_y)
+            except Exception:
+                self.logo_image = None
+
         # Title bar area
         header = tk.Frame(root, bg=BG)
         header.pack(fill=tk.X, padx=24, pady=(20, 0))
@@ -320,8 +332,13 @@ class SwitcherApp:
         sub_f   = tkfont.Font(family="Segoe UI", size=9)
         mono_f  = tkfont.Font(family="Consolas", size=9)
 
-        tk.Label(header, text="⬡  Chromium Switcher", font=title_f,
-                 bg=BG, fg=TEXT).pack(side=tk.LEFT)
+        if self.logo_image:
+            tk.Label(header, image=self.logo_image, bg=BG).pack(side=tk.LEFT, padx=(0, 10))
+            tk.Label(header, text="Chromium Switcher", font=title_f,
+                     bg=BG, fg=TEXT).pack(side=tk.LEFT)
+        else:
+            tk.Label(header, text="⬡  Chromium Switcher", font=title_f,
+                     bg=BG, fg=TEXT).pack(side=tk.LEFT)
 
         self.status_lbl = tk.Label(header, text="idle", font=sub_f,
                                    bg=BG, fg=MUTED)
@@ -464,6 +481,13 @@ def main():
         )
     except Exception:
         pass
+
+    ico_path = Path(__file__).resolve().parent / "icon.ico"
+    if ico_path.exists():
+        try:
+            root.iconbitmap(str(ico_path))
+        except Exception:
+            pass
 
     style = ttk.Style()
     try:
