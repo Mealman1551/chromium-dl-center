@@ -296,7 +296,7 @@ BUILD_META = {
 class SwitcherApp:
     def __init__(self, root: tk.Tk):
         self.root = root
-        root.title("Chromium Switcher")
+        root.title("Chromium Download Center")
         root.geometry("720x540")
         root.configure(bg=BG)
         root.resizable(True, True)
@@ -334,10 +334,10 @@ class SwitcherApp:
 
         if self.logo_image:
             tk.Label(header, image=self.logo_image, bg=BG).pack(side=tk.LEFT, padx=(0, 10))
-            tk.Label(header, text="Chromium Switcher", font=title_f,
+            tk.Label(header, text="Chromium Download Center", font=title_f,
                      bg=BG, fg=TEXT).pack(side=tk.LEFT)
         else:
-            tk.Label(header, text="⬡  Chromium Switcher", font=title_f,
+            tk.Label(header, text="Chromium Download Center", font=title_f,
                      bg=BG, fg=TEXT).pack(side=tk.LEFT)
 
         self.status_lbl = tk.Label(header, text="idle", font=sub_f,
@@ -482,7 +482,7 @@ def main():
     except Exception:
         pass
 
-    ico_path = Path(__file__).resolve().parent / "icon.ico"
+    ico_path = Path(__file__).resolve().parent / "assets" / "icon.ico"
     if ico_path.exists():
         try:
             root.iconbitmap(str(ico_path))
