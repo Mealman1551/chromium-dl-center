@@ -1,1 +1,1 @@
-python -m nuitka --standalone --output-dir=dist --remove-output --windows-console-mode=disable --enable-plugin=tk-inter --include-package=requests --windows-icon-from-ico=icon.ico chromium_switcher.py
+python -m nuitka --standalone --output-dir=dist --remove-output --windows-console-mode=disable --enable-plugin=tk-inter --include-package=requests --windows-icon-from-ico=assets/icon.ico chr.py
