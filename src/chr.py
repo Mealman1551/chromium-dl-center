@@ -482,7 +482,7 @@ def main():
     except Exception:
         pass
 
-    ico_path = Path(__file__).resolve().parent / "assets" / "icon.ico"
+    ico_path = Path(__file__).resolve().parent / "assets" / "chr.ico"
     if ico_path.exists():
         try:
             root.iconbitmap(str(ico_path))
