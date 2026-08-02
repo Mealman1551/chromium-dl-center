@@ -1,1 +1,2 @@
 requests>=2.0.0
+nuitka>=4.0.6
