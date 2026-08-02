@@ -18,5 +18,6 @@ check the releases page for the installer and portable version: [Latest release]
 winget install git.git
 git clone https://github.com/Mealman1551/chromium-dl-center.git
 cd chromium-dl-center
+pip install -r requirements.txt
 ./build.bat
 ```
