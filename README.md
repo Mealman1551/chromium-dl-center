@@ -4,9 +4,9 @@ This tool is capable of downloading and installing Chromium stable, dev and late
 
 ### Important
 
-This project is **NOT** affiliated with The Chromium Project or Google LLC
+This project is **NOT** affiliated with The Chromium Project or Google LLC.
 
-This tool is online and free to use but i made it for personal use, updates might be slow due to this
+This tool is free to use but i made it for personal use, updates might be slow due to this.
 
 ## Download
 
