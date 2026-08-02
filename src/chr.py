@@ -98,10 +98,34 @@ def restore_backup(backup: Path | None, q: queue.Queue):
             log(q, f"Failed to restore backup: {e}")
 
 
-def remove_backup(backup: Path | None, q: queue.Queue):
-    if backup and backup.exists():
-        log(q, "Removing backup...")
-        shutil.rmtree(str(backup), ignore_errors=True)
+def remove_backup(backup: Path | None, q: queue.Queue, silent: bool = False):
+    """Remove the backup directory. If `silent` is True, only log on errors.
+
+    The function will attempt to fix permissions on read-only files and
+    remove the tree. Successful removal is not logged when `silent=True`.
+    """
+    if not (backup and backup.exists()):
+        return
+
+    def _on_rm_error(func, path, exc_info):
+        try:
+            os.chmod(path, 0o666)
+            func(path)
+        except Exception as e:
+            if not silent:
+                log(q, f"Failed to remove path during cleanup: {path} ({e})")
+
+    try:
+        shutil.rmtree(str(backup), onerror=_on_rm_error)
+    except Exception as e:
+        log(q, f"Failed to remove backup: {e}")
+        return
+
+    if not silent:
+        if not backup.exists():
+            log(q, "Backup removed.")
+        else:
+            log(q, "Warning: backup still exists after removal attempt.")
 
 
 def download_file(url: str, dest: Path, q: queue.Queue):
@@ -248,8 +272,9 @@ def install_build(channel: str, q: queue.Queue, done_event: threading.Event):
             pass
 
         if code == 0:
-            log(q, f"✓ Chromium [{channel}] installed successfully.")
-            remove_backup(backup, q)
+            # Remove backup silently (under the hood) and show a simple success message
+            remove_backup(backup, q, silent=True)
+            log(q, "Geslaagt")
         else:
             log(q, f"✗ Installer exited with code {code}.")
             restore_backup(backup, q)
@@ -455,7 +480,11 @@ class SwitcherApp:
         try:
             while True:
                 line = self.q.get_nowait()
-                tag = "ok" if "✓" in line else ("err" if "✗" in line or "Error" in line else "")
+                tag = ""
+                if "✓" in line or "Geslaagt" in line or "Geslaagd" in line:
+                    tag = "ok"
+                elif "✗" in line or "Error" in line:
+                    tag = "err"
                 self._append(line, tag)
         except queue.Empty:
             pass
